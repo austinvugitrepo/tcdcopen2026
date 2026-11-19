@@ -1,0 +1,126 @@
+
+Austin's notes and plan for the TCDC Open 2026
+
+--- Notes ---
+
+I am on Team 4
+my vpn should be working as ping 10.11.80.3 worked for me
+
+/* TxCR and VPN creds are sent through Discord */
+
+Jump box is used for accessing competition infrastructure, IP is 10.99.4.2
+ports 3001-3006 are 6 chrome web browser clients, 3007 and 3008 are Remmina RDP clients
+
+/* use https://10.99.4.2:<port> */
+
+I plan on keeping FTP and SSH up specifically
+Will help with the injects but not that important as they are 20% of the grade
+
+dealing with Ubuntu Server 26.04 LTS primarily for my services
+
+each box domain is <hostname>.team4.playtcdc.org
+
+SSH is on 100.104.10.22 ssh-workstation.team4.playtcdc.org
+FTP is on 100.104.10.21 ftp-archive.team4.playtcdc.org
+
+might look into opnsense firewallrules in case can't hop to dmz right away.
+
+Everyone shares a list of the same users on every box:
+
+/* note: service may also have a specific service user not listed here
+ * default passwords for both users listed below and service users are not printed in the packet and will be distributed via      
+ * Discord
+ */
+
+username	role
+
+washington	admin
+kennedy		admin
+teddy		admin
+lincoln		admin
+ross		admin
+streep		employee
+franklin 	employee
+parks		employee
+armstrong	employee
+hamilton	employee
+mlk		employee
+tubman		employee
+manziel		employee /* note: name is actually Mazniel so this username and Name are different for this one */
+deniro		employee
+bush		employee
+
+
+changing the password of any users listed above or service user that is utilized by one of the uptime checks, it does not automatically update the password used by said uptime check. go to the link listed below and update the password there too so you don't get penalized by accident service down
+
+
+Links:
+
+Password Changes:
+
+	https://dash.playtcdc.org/team/passwords
+
+
+Scoreboard:
+	
+	https://score.playtcdc.org/
+
+Inject submissions:
+
+	https://dash.playtcdc.org/team/passwords
+
+Store:
+
+	https://dash.playtcdc.org/team/store
+
+Accessing Xen Orchestra:
+
+	https://sso.txcr.dev/
+
+
+
+--- Plans ---
+
+ssh service is most certainly OpenSSH
+ftp service is probably vsftpd but not sure on this
+
+To do list:
+
+100.104.10.22 ssh-workstation.team4.playtcdc.org:
+
+- do a ```apt install -y git lynis clamav ```
+- do a ```lynis audit system```
+- do a ```ss -tulpin``` to show what's listening
+- drop in replace configuration files/ script out editing configuration files for hardening
+- check cron jobs via ```crontab -l ```
+- check .ssh/authorized_keys
+
+/* SSH specific hardening instructions here */
+	- to be filled later
+
+- do a ```clamscan -r``` on /usr/bin, /home
+- do a ```lynis audit system```
+- harden box based on lynis suggestions
+
+100.104.10.21 ftp-archive.team4.playtcdc.org:
+
+- do a ```apt install -y git lynis clamav ```
+- do a ```lynis audit system```
+- do a ```ss -tulpin``` to show what's listening
+- drop in replace configuration files/ script out editing configuration files for hardening
+- check cron jobs via ```crontab -l ```
+- check .ssh/authorized_keys
+
+/* FTP specific hardening instructions here */
+	- to be filled later
+
+- do a ```clamscan -r``` on /usr/bin, /home
+- do a ```lynis audit system```
+- harden box based on lynis suggestions
+
+
+
+
+
+
+	
