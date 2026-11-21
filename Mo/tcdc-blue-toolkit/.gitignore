@@ -1,0 +1,14 @@
+# Never commit passwords or audit output
+tcdc-passwords-*.txt
+passwords-*.txt
+*.state
+report-*.txt
+ad-audit-*.txt
+now-*.state
+svc-check-team*.log
+*.tar.gz
+*.sha256
+*.zip
+tcdc-pw/
+tcdc-backup/
+tcdc-audit/
