@@ -86,41 +86,76 @@ ftp service is probably vsftpd but not sure on this
 
 To do list:
 
-100.104.10.22 ssh-workstation.team4.playtcdc.org:
+Phases cover both machines unless explicitly mentioned for one:
 
-- do a ```apt install -y git lynis clamav ```
-- do a ```lynis audit system```
+100.104.10.22 ssh-workstation.team4.playtcdc.org
+100.104.10.21 ftp-archive.team4.playtcdc.org
+
+--- Phase 1: Prepping/Scouting/Info: ---
+
+Goal: The main objective for the beginning of the game is to get on, prepare the vms, get information and set up for when Red Team will attack
+
+get all the packages that i will require:
+	- do a ```apt install -y git lynis clamav ksh debsums rsyslog```
+
+do a full system scan:
+	- do a ```lynis audit system```
+
+check listening ports:
 - do a ```ss -tulpin``` to show what's listening
-- drop in replace configuration files/ script out editing configuration files for hardening
-- check cron jobs via ```crontab -l ```
-- check .ssh/authorized_keys
 
-/* SSH specific hardening instructions here */
-	- to be filled later
+Grab my tools:
+	- do a ```git clone https://github.com/austinvugitrepo/tcdcopen2026.git```
 
-- do a ```clamscan -r``` on /usr/bin, /home
-- do a ```lynis audit system```
-- harden box based on lynis suggestions
+Make backups of important files and directories:
+	- run backup.bash
 
-100.104.10.21 ftp-archive.team4.playtcdc.org:
+--- Phase 2: Securing the machines ---
 
-- do a ```apt install -y git lynis clamav ```
-- do a ```lynis audit system```
-- do a ```ss -tulpin``` to show what's listening
-- drop in replace configuration files/ script out editing configuration files for hardening
-- check cron jobs via ```crontab -l ```
-- check .ssh/authorized_keys
+Goal: The main objective after Phase 1 is locking down the machines, we wanna secure the systems and prevent anypossible backdoors
 
-/* FTP specific hardening instructions here */
-	- to be filled later
+Grab my tools:
+	- do a ```git clone https://github.com/austinvugitrepo/tcdcopen2026.git```
 
-- do a ```clamscan -r``` on /usr/bin, /home
-- do a ```lynis audit system```
-- harden box based on lynis suggestions
+Harden ftp and ssh:
+	- drop in replace configuration files/ script out editing configuration files for hardening
 
+Check on the firewall:
+	- do a ```ufw status verbose```
+	- turn on allowed ports 22 (and 21 on ftp-archive)
+		- ```ufw allow 22/tcp``` (```ufw allow 21/tcp```) 
+	- if you need to turn it on:
+		```ufw enable```
+	- to stop against brute force login attacks ```ufw limit 22/tcp```  ```ufw limit 21/tcp```
+	- turn on logging with ```ufw logging medium```
 
+Check /etc/passwd from backups:
+	- compare it with the list of users in the packet, any sus users we delete 
 
+Immediately lock down accounts:
+	- run lbpasswd.bash /* Note: This only works if the user accounts are local otherwise manually reset with passwd */
 
+--- Phase 3: Preventing and Defending Attacks ---
 
+Check for any planted ssh keys on each user:
+	- check .ssh/authorized_keys
 
+Check for hidden cron jobs and systemd-timers:
+	- check cron jobs via ```crontab -l ```
+	- check via ```systemctl list-timers```
+
+Check for sus system services:
+	- ```systemctl list-unit-files```
+
+Check for sus packages:
+	```debsums -c```
+	for configs: ```debsums -ce``` 
+
+Check for malicious files: 
+	- do a ```clamscan -r``` on /usr/bin, /home, /root, /tmp, /etc, /var 
+
+Do another system scan:
+	- do a ```lynis audit system```
 	
+- harden box based on lynis suggestions
+
