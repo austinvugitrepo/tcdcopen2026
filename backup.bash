@@ -8,6 +8,6 @@ tar -cvzf rootbackup.tar.gz /root
 mkdir auth
 cp /etc/{passwd,shadow,group,gshadow,sudoers} auth/
 mkdir ftp
-cp /etc/{ftpusers,vsftpd.conf} ftpstuff/
+cp /etc/{ftpusers,vsftpd.conf} ftp/
 
 
